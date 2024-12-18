@@ -1,43 +1,65 @@
-package hust.soict.cybersecurity.aims.cart;
+package hust.soict.dsai.aims.cart;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
-import hust.soict.cybersecurity.aims.media.Media;
+import javax.naming.LimitExceededException;
+
+import hust.soict.dsai.aims.media.Media;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Cart {
-	
-	public static final int MAX_NUMBERS_ORDERED = 20;
-	private ArrayList<Media> itemsOrdered = new ArrayList<Media>();
-	private float total = 0;
-	
-	public void addMedia(Media media) {
-		itemsOrdered.add(media);
+	public static final int MAX_ORDERED = 20;
+//	private ArrayList<Media> itemsOrdered = new ArrayList<Media>();
+//	private ObservableList<Media> itemsOrdered =FXCollections.observableArrayList();
+	private ObservableList<Media> itemsOrdered = FXCollections.observableArrayList();
+
+//	public ArrayList<Media> getItemsOrdered() {
+////		String[] listOrdered = new String[qtyOrdered];
+////		for (int i = 0; i< qtyOrdered; i++) {
+////			listOrdered[i] = itemsOrdered[i].getTitle();
+////		}
+////		return listOrdered;
+//		return itemsOrdered;
+//	}
+	public ObservableList<Media> getItemsOrdered() {
+		return itemsOrdered;
+	}
+
+	public void addMedia(Media media) throws LimitExceededException {
+		if ((itemsOrdered.size()) >= MAX_ORDERED) {
+			throw new LimitExceededException("Full");
+		}
+		else if (itemsOrdered.contains(media)) {
+			System.out.println("This is already in your order!");
+		}
+		else {
+			itemsOrdered.add(media);
+			System.out.println("Media added!");
+			}
 	}
 	
 	public void removeMedia(Media media) {
-		itemsOrdered.remove(media);
-	}
-	
-	public float totalCost() {
-		total = 0;
-		for(Media media : itemsOrdered) {
-			total += media.getCost();
+		if (itemsOrdered.contains(media)) {
+			itemsOrdered.remove(media);
+			System.out.println("Removed");
+		} else {
+			System.out.println("This is not in the order!");
 		}
-		return total;
 	}
-	
-	public void print() {
-		total = 0;
+
+	public void printOrders() {
 		System.out.println("***********************CART***********************");
 		System.out.println("Ordered Items:");
-		for (int i = 0; i < itemsOrdered.size(); i++) { 
-			System.out.println((i + 1) + ". DVD - " + itemsOrdered.get(i).toString());
+		for (Media item : itemsOrdered) {
+			System.out.println(item.toString());
 		}
 		System.out.println("Total cost: " + totalCost());
-		System.out.println("***************************************************");
 	}
-	
-	public void searchByID(int id) {
+
+	public void searchById(int id) {
 		boolean found = false;
 		for (int i = 0; i < itemsOrdered.size(); i++) {
 			if (itemsOrdered.get(i).getId() == id) {
@@ -46,11 +68,12 @@ public class Cart {
 				break;
 			}
 		}
+
 		if (!found) {
-			System.out.println("There are no medias that match your search");
+			System.out.println("No Media found with ID: " + id);
 		}
 	}
-	
+
 	public void searchByTitle(String title) {
 		boolean found = false;
 		for (int i = 0; i < itemsOrdered.size(); i++) {
@@ -60,11 +83,28 @@ public class Cart {
 				break;
 			}
 		}
+
 		if (!found) {
-			System.out.println("There are no medias that match your search");
+			System.out.println("No Media found with title: " + title);
 		}
 	}
-	
+
+	public Media takeById(int id) {
+		boolean found = false;
+		for (int i = 0; i < itemsOrdered.size(); i++) {
+			if (itemsOrdered.get(i).getId() == id) {
+				System.out.println("Media found: " + itemsOrdered.get(i).toString());
+				found = true;
+				return itemsOrdered.get(i);
+			}
+		}
+
+		if (!found) {
+			System.out.println("No Media found with ID: " + id);
+		}
+		return null;
+	}
+
 	public Media takeByTitle(String title) {
 		boolean found = false;
 		for (int i = 0; i < itemsOrdered.size(); i++) {
@@ -80,20 +120,32 @@ public class Cart {
 		}
 		return null;
 	}
-	
+
 	public void sortByCostTitle() {
 		Collections.sort(itemsOrdered, Media.COMPARE_BY_COST_TITLE);
-		System.out.println("Sorting by Cost - Title:");
+		System.out.println("Sorted by Cost, then Title:");
 		itemsOrdered.forEach(System.out::println);
 	}
 
 	public void sortByTitleCost() {
 		Collections.sort(itemsOrdered, Media.COMPARE_BY_TITLE_COST);
-		System.out.println("Sorting by Title - Cost:");
+		System.out.println("Sorted by Title, then Cost:");
 		itemsOrdered.forEach(System.out::println);
 	}
+
+	public float totalCost() {
+		float totalCost = 0;
+		for (Media item : itemsOrdered) {
+			totalCost += item.getCost();
+		}
+		return totalCost;
+	}
+
+//	public void clear() {
+//		this.itemsOrdered = new ArrayList<Media>();
+//	}
 	
 	public void clear() {
-		this.itemsOrdered = new ArrayList<Media>();
+		this.itemsOrdered = FXCollections.observableArrayList();
 	}
 }
