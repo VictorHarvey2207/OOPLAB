@@ -1,22 +1,17 @@
-package hust.soict.cybersecurity.aims.media;
+package hust.soict.dsai.aims.media;
 
-public class Disc extends Media{
-
+public class Disc extends Media {
 	private int length;
 	private String director;
-	
-	public Disc(String title, String category, String director, int length, float cost) {
-		super(title, category, cost);
+
+	public Disc() {
+		this.length = 0;
+		this.director = "";
+	}
+	public Disc(int id, String title, String category, float cost, String director, int length) {
+		super(id, title, category, cost);
 		this.director = director;
 		this.length = length;
-	}
-
-	public Disc(String title, String category, float cost) {
-		super(title, category, cost);
-	}
-
-	public Disc(String title) {
-		super(title);
 	}
 
 	public int getLength() {
@@ -27,4 +22,8 @@ public class Disc extends Media{
 		return director;
 	}
 
+	@Override
+	public String toString() {
+		return "Disc" + "-" + this.getTitle() + "-" + this.getCategory() + "-" + this.getDirector() + "-" + String.valueOf(this.getLength()) + ": " + String.valueOf(this.getCost()) + "$";
+	};
 }

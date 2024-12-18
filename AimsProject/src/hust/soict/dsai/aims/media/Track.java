@@ -1,37 +1,54 @@
-package hust.soict.cybersecurity.aims.media;
+package hust.soict.dsai.aims.media;
 
-public class Track implements Playable{
+import hust.soict.dsai.aims.exception.PlayerException;
+
+public class Track implements Playable {
 	private String title;
 	private int length;
-	
+
+	public Track() {
+		this.title = "";
+		this.length = 0;
+	}
+
+	public Track(String title) {
+		this.title = title;
+	}
+
+	public Track(int length) {
+		this.length = length;
+	}
+
 	public Track(String title, int length) {
-		super();
 		this.title = title;
 		this.length = length;
 	}
-	
+
 	public String getTitle() {
 		return title;
 	}
+
 	public int getLength() {
 		return length;
 	}
-	
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof Track)) {
+            return false;
+        }
+
+        Track other = (Track) obj;
+        return (this.title != null && this.title.equals(other.title)) && this.length == other.length;
+    }
+
 	@Override
-	public boolean equals(Object o) {
-		if (o == null || !(o instanceof Media)) {
-			return false;
+	public void play() throws PlayerException {
+		if (this.getLength() > 0) {
+			System.out.println("Playing track: " + this.getTitle());
+			System.out.println("Track length: " + this.getLength());
 		}
-		
-		Track other = (Track) o;
-		
-		return (this.title != null && this.length != 0) && 
-				(this.title == (other.title) && this.length == (other.length));
+		else {throw new PlayerException("Error: Track length is non-positive!");}
 	}
-	
-	@Override
-	public void play() {
-		System.out.println("Playing DVD: " + this.getTitle());
-		System.out.println("DVD length: " + this.getLength());
-	}
+
 }

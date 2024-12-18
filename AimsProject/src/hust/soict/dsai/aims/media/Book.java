@@ -1,55 +1,42 @@
-package hust.soict.cybersecurity.aims.media;
+package hust.soict.dsai.aims.media;
 
 import java.util.ArrayList;
 import java.util.List;
-public class Book extends Media {
+import java.util.Random;
 
+public class Book extends Media {
 	private List<String> authors = new ArrayList<String>();
-	
+
+	public Book() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Book(String title, String category, float cost) {
-		super(title, category, cost);
+		super(new Random().nextInt(1_000_000) + 1, title, category, cost);
 	}
 
 	public void addAuthor(String authorName) {
-		boolean added = false;
-		for (String author: authors) {
-			if (author.equals(authorName)) {
-				added = true;
-				break;
-			}
-		}
-		if (added) {
-			System.out.println("This author has already been added");
-		}
-		else {
+		if (!authors.contains(authorName)) {
 			authors.add(authorName);
-			System.out.println("Author " + authorName + " has been added");
+		} else {
+			System.out.println("This author already exist!");
 		}
 	}
-	
-	public void removeAuthor(String authorName) {
-		boolean removed = true;
-		for (String author: authors) {
-			if(author.equals(authorName)) {
-				removed = false;
-				break;
-			}
-		}
-		if (removed) {
-			System.out.println("This author does not exist");
-		}
-		else {
+
+	public void removeAuthors(String authorName) {
+		if (authors.contains(authorName)) {
 			authors.remove(authorName);
-			System.out.println("This author has been removed");
+		} else {
+			System.out.println("This author is not existed!");
 		}
 	}
-	
+
+	public List<String> getAuthors() {
+		return authors;
+	}
+
+	@Override
 	public String toString() {
-		String s = "";
-		for (String author : authors) {
-			s += author;
-			s += ", ";
-		}
-		return getTitle() + " - " + getCategory() + " - " + s + "- "  + getCost() + " $";
+		return "Book" + "-" + this.getTitle() + "-" + this.getCategory() + ": " + String.valueOf(this.getCost()) + "$";
 	}
 }
