@@ -1,3 +1,0 @@
-Question 6.1:
-It outputs "You've selected: No."
-Instead of using showConfirmDialog, use showOptionDialog with two choices: "Yes" and "No."
